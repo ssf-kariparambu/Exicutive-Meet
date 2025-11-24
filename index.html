@@ -273,13 +273,16 @@
 </div>
 
 <script>
-/* SHOW ONLY WHEN URL HAS #approval */
-if (window.location.hash === "#approval") {
-    document.getElementById("approvalPage").style.display = "block";
-    document.body.style.overflow = "hidden"; // Prevent background scroll
-}
+/* 🔥 FIXED: AUTO OPEN APPROVAL PAGE AFTER FULL LOAD */
+window.addEventListener("load", function () {
+    if (location.hash === "#approval") {
+        document.getElementById("approvalPage").style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+});
+</script>
 
-
+<script>
 /* ====================== */
 /* ORIGINAL APPROVAL CODE */
 /* ====================== */
