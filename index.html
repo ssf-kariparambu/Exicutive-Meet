@@ -232,6 +232,147 @@
   </style>  
 </head>  
 <body>  
+	
+	<!-- 🔥 HIDDEN APPROVAL PAGE (SHOW ONLY WHEN URL HAS #approval) -->
+<div id="approvalPage" style="
+    display:none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    overflow-y: auto;
+    z-index: 999999;
+    padding: 0;
+">
+
+    <div style="max-width: 450px; margin: auto; padding: 20px;">
+
+        <h2 style="text-align:center;">Registration Approval</h2>
+
+        <input type="text" id="reg" placeholder="Enter Register Number"
+            style="width:100%;padding:10px;border-radius:5px;border:1px solid #bbb;margin-top:5px;">
+
+        <button onclick="checkRegister()"
+            style="margin-top:10px;width:100%;padding:12px;background:#0078ff;color:white;border:none;border-radius:5px;font-size:16px;cursor:pointer;">
+            Approve
+        </button>
+
+        <p id="result" style="text-align:center;margin-top:6px;font-size:16px;font-weight:bold;"></p>
+
+        <a onclick="toggleList()" style="display:block;margin-top:10px;text-align:center;color:#0078ff;font-weight:bold;cursor:pointer;">
+            Show Registration
+        </a>
+
+        <div id="regList" style="display:none;margin-top:10px;background:#eef3ff;padding:10px;border-radius:8px;overflow-x:auto;">
+            <h3>Approved Registrations</h3>
+            <ul id="regItems" style="list-style:none;padding:0;margin:0;min-width:500px;"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+/* SHOW ONLY WHEN URL HAS #approval */
+if (window.location.hash === "#approval") {
+    document.getElementById("approvalPage").style.display = "block";
+    document.body.style.overflow = "hidden"; // Prevent background scroll
+}
+
+
+/* ====================== */
+/* ORIGINAL APPROVAL CODE */
+/* ====================== */
+
+let registeredNumbers = [];
+let fixedDetails = {};
+
+for (let i = 1763; i <= 1900; i++) {
+  let reg = "REG-" + i;
+  registeredNumbers.push(reg);
+
+  fixedDetails[reg] = {
+    name: "Student " + (i - 1762),
+    phone: "98765" + (3000 + (i - 1763)),
+    qrcode: "https://i.ibb.co/wF6Zv4b5/onlinewebtoolkit-2.png"
+  };
+}
+
+let approvedList = JSON.parse(localStorage.getItem("approvedList")) || [];
+
+function checkRegister() {
+  let userInput = document.getElementById("reg").value.trim();
+  let resultBox = document.getElementById("result");
+
+  if (userInput === "") {
+    resultBox.innerHTML = "Please enter a number!";
+    resultBox.style.color = "red";
+    return;
+  }
+
+  if (registeredNumbers.includes(userInput)) {
+    resultBox.innerHTML = "✔ Registration Approved";
+    resultBox.style.color = "green";
+
+    if (!approvedList.some(item => item.reg === userInput)) {
+      let details = fixedDetails[userInput];
+      approvedList.push({
+        reg: userInput,
+        name: details.name,
+        phone: details.phone,
+        qrcode: details.qrcode
+      });
+      localStorage.setItem("approvedList", JSON.stringify(approvedList));
+    }
+  } else {
+    resultBox.innerHTML = "✘ Not Approved";
+    resultBox.style.color = "red";
+  }
+}
+
+function toggleList() {
+  const listBox = document.getElementById("regList");
+  if (listBox.style.display === "none") {
+    listBox.style.display = "block";
+    loadApprovedList();
+  } else {
+    listBox.style.display = "none";
+  }
+}
+
+function loadApprovedList() {
+  const listItems = document.getElementById("regItems");
+  listItems.innerHTML = "";
+
+  approvedList.forEach((item, index) => {
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      <div style="display:flex;align-items:center;gap:18px;white-space:nowrap;">
+        <span style="width:28px;font-weight:bold;">${String(index + 1).padStart(2,'0')}.</span>
+        <span style="width:65px;font-weight:bold;">${item.reg}</span>
+        <span style="width:150px;text-align:left;">${item.name}</span>
+        <span style="width:100px;text-align:left;">${item.phone}</span>
+        <img src="${item.qrcode}" style="width:45px;border-radius:4px;">
+        <span style="cursor:pointer;font-size:18px;width:30px;text-align:center;" onclick="removeItem(${index})">
+          <i class="fa-solid fa-trash"></i>
+        </span>
+      </div>
+    `;
+
+    listItems.appendChild(li);
+  });
+}
+
+function removeItem(index) {
+  approvedList.splice(index, 1);
+  localStorage.setItem("approvedList", JSON.stringify(approvedList));
+  loadApprovedList();
+}
+</script>
+
+
+	
 	<div class="main-header">
  <img class="logo" src="https://i.ibb.co/prz4dgYj/20250522-163807-removebg-preview.png"/>
  <h3 class="headname">𝐒𝐒𝐅 𝐊𝐀𝐑𝐈𝐏𝐀𝐑𝐀𝐌𝐁𝐀 𝐔𝐍𝐈𝐓</h3>
@@ -319,7 +460,7 @@
 </div>
 <!-- SCRIPT -->
 <script>
-let serialNumber = 1001;
+let serialNumber = 001; 
 const GETFORM_URL = "https://getform.io/f/bejlzzqa";
 
 const form = document.getElementById("registerForm");
@@ -382,5 +523,7 @@ Phone  : ${phone}`;
     menu.classList.toggle("active");
   });
 </script>
+</body></html>
+</div>
 </body>
 	</html>
